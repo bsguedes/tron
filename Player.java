@@ -1,6 +1,5 @@
 import java.awt.*;
 import java.lang.*;
-import java.applet.*;
 
 public class Player {
     public String name;
@@ -25,6 +24,8 @@ public class Player {
     public int old_d;
     public boolean crash;
     public int score;
+
+    public int playerSize = 5;
 
     public Player() {
     }
@@ -64,23 +65,26 @@ public class Player {
     public void paint(Graphics g) {
         if (crash) {
             g.setColor(Color.red);
-            g.drawLine(x1 - CRASH_DELTA, y1 - CRASH_DELTA, x1 + CRASH_DELTA, y1 + CRASH_DELTA);
-            g.drawLine(x1, y1 - CRASH_DELTA, x1, y1 + CRASH_DELTA);
-            g.drawLine(x1 + CRASH_DELTA, y1 - CRASH_DELTA, x1 - CRASH_DELTA, y1 + CRASH_DELTA);
-            g.drawLine(x1 - CRASH_DELTA, y1, x1 + CRASH_DELTA, y1);
+            g.drawLine(playerSize *x1 - CRASH_DELTA, playerSize *y1 - CRASH_DELTA, playerSize *x1 + CRASH_DELTA, playerSize *y1 + CRASH_DELTA);
+            g.drawLine(playerSize *x1, playerSize *y1 - CRASH_DELTA, playerSize *x1, playerSize *y1 + CRASH_DELTA);
+            g.drawLine(playerSize *x1 + CRASH_DELTA, playerSize *y1 - CRASH_DELTA, playerSize *x1 - CRASH_DELTA, playerSize *y1 + CRASH_DELTA);
+            g.drawLine(playerSize *x1 - CRASH_DELTA, playerSize *y1, playerSize *x1 + CRASH_DELTA, playerSize *y1);
         } else {
             g.setColor(color);
-            g.drawLine(x0, y0, x1, y1);
+            g.fillRect(playerSize *x1, playerSize *y1, playerSize , playerSize );
         }
     }
 
     public void newPos() {
         x0 = x1;
         y0 = y1;
-        arena.draw((graphics) -> {
-            paint(graphics);
-        });
+        if (arena.SHOULD_DRAW) {
+            arena.draw((graphics) -> {
+                paint(graphics);
+            });
+        }
     }
+
 
     public boolean markBoard(int direction) {
         boolean r = false;

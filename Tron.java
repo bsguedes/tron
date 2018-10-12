@@ -69,7 +69,7 @@ public class Tron extends Frame {
 	public void updateScore() {
 		playerOneScore = arena.player1.score;
 		playerTwoScore = arena.player2.score;
-		statusLabel.setText("Player 1: [" + playerOneScore + "]  " + "Player 2: [" + playerTwoScore + "]");
+		statusLabel.setText(arena.player1.name + ": [" + playerOneScore + "]  " + arena.player2.name +": [" + playerTwoScore + "]");
 	}
 
 	public void start() {

@@ -7,7 +7,9 @@ import java.net.*;
 import java.io.*;
 
 public class Arena extends Canvas implements Runnable {
-	private final static int SIZE = 256;
+	private final static int SIZE = 64;
+
+	public final static boolean SHOULD_DRAW = true;
 
 	public Tron tron;
 
@@ -29,9 +31,11 @@ public class Arena extends Canvas implements Runnable {
 	public int lastmove;
 	public int gen_no;
 
+	public int playerSize = 5;
+
 	public Arena(Tron t) {
 		this.setBackground(Color.black);
-		this.resize(this.SIZE, this.SIZE);
+		this.resize(playerSize * this.SIZE, playerSize * this.SIZE);
 
 		this.conductor = null;
 		this.board = null;
@@ -39,11 +43,20 @@ public class Arena extends Canvas implements Runnable {
 		this.tron = t;
 		this.gen_no = 0;
 
-		this.xmax = this.size().width;
-		this.ymax = this.size().height;
+		this.xmax = SIZE;
+		this.ymax = SIZE;
 
-		this.player1 = new CroasonhoRacingTeamPlayer("first", Color.pink, this, this.xmax, this.ymax, (byte) 1);
-		this.player2 = new MyOtherPlayer("second", Color.cyan, this, this.xmax, this.ymax, (byte) 2);
+		Player croasonho1 = new CroasonhoRacingTeamPlayer("Croasonho", Color.red, this, this.xmax, this.ymax, (byte) 1);
+        Player croasonho2 = new CroasonhoRacingTeamPlayer("Croasonho", Color.red, this, this.xmax, this.ymax, (byte) 2);
+
+		Player random1 = new RandomPlayer("Random", Color.green, this, this.xmax, this.ymax, (byte) 1);
+        Player random2 = new RandomPlayer("Random", Color.green, this, this.xmax, this.ymax, (byte) 2);
+
+        Player other1 = new MyOtherPlayer("Other", Color.yellow, this, this.xmax, this.ymax, (byte) 1);
+        Player other2 = new MyOtherPlayer("Other", Color.yellow, this, this.xmax, this.ymax, (byte) 2);
+
+		this.player1 = croasonho1;
+		this.player2 = random2;
 	}
 
 	public void start() {

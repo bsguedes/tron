@@ -86,19 +86,19 @@ public class CroasonhoRacingTeamPlayer extends Player {
             if(isObstacleBlocking(board, dir, x, y)){
                 return -100;
             }
-            int scoreLeft = getScore(board, Tron.WEST, depth+1, x-1, y, eX, eY);
-            int scoreRight = getScore(board, Tron.EAST, depth+1, x+1, y, eX, eY);
-            int scoreUp = getScore(board, Tron.NORTH, depth+1, x, y-1, eX, eY);
-            int scoreDown = getScore(board, Tron.SOUTH, depth+1, x, y+1, eX, eY);
+            int scoreLeft = getScore(board, Tron.WEST, depth+1, x-1, y, ex, ey);
+            int scoreRight = getScore(board, Tron.EAST, depth+1, x+1, y, ex, ey);
+            int scoreUp = getScore(board, Tron.NORTH, depth+1, x, y-1, ex, ey);
+            int scoreDown = getScore(board, Tron.SOUTH, depth+1, x, y+1, ex, ey);
             return 5 + Math.max(scoreLeft, Math.max(scoreRight, Math.max(scoreUp, scoreDown)));
         } else {
             if(isObstacleBlocking(board, dir, ex, ey)){
                 return 100;
             }
-            int scoreLeft = getScore(board, Tron.WEST, depth+1, x, y, eX-1, eY);
-            int scoreRight = getScore(board, Tron.EAST, depth+1, x, y, eX+1, eY);
-            int scoreUp = getScore(board, Tron.NORTH, depth+1, x, y, eX, eY-1);
-            int scoreDown = getScore(board, Tron.SOUTH, depth+1, x, y, eX, eY+1);
+            int scoreLeft = getScore(board, Tron.WEST, depth+1, x, y, ex-1, ey);
+            int scoreRight = getScore(board, Tron.EAST, depth+1, x, y, ex+1, ey);
+            int scoreUp = getScore(board, Tron.NORTH, depth+1, x, y, ex, ey-1);
+            int scoreDown = getScore(board, Tron.SOUTH, depth+1, x, y, ex, ey+1);
             return -5 + Math.max(scoreLeft, Math.max(scoreRight, Math.max(scoreUp, scoreDown)));
         }
     }
