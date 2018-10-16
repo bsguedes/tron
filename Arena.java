@@ -118,7 +118,7 @@ public class Arena extends Canvas implements Runnable {
 
 				this.state = WAITING;
 				this.tron.updateScore();
-				//this.startAgain = true;
+				if (!SHOULD_DRAW) this.startAgain = true;
 				break;
 			case WAITING:
 				if (this.startAgain) {
@@ -131,9 +131,11 @@ public class Arena extends Canvas implements Runnable {
 
 			this.repaint();
 
-			try {
-				Thread.sleep(4);
-			} catch (InterruptedException e) {
+			if ( SHOULD_DRAW ) {
+				try {
+					Thread.sleep(4);
+				} catch (InterruptedException e) {
+				}
 			}
 
 			if (this.player1 != null) {

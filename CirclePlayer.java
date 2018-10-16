@@ -83,12 +83,13 @@ public class CirclePlayer extends Player {
                     final_direction = this.d;
                 }
                 else {
-                    for (int i = 0; i < 4; i++){
-                        if (!isObstacleBlocking(i, 1)){
-                            final_direction = i;
+                    for (int i = 0; i < 20; i++){
+                        int rd = random.nextInt(4);
+                        if (!isObstacleBlocking(rd, 1)){
+                            final_direction = rd;
                             break;
                         }
-                        final_direction = this.d;
+                        final_direction = this.d; //crash
                     }                    
                 }
             } else {
@@ -96,13 +97,14 @@ public class CirclePlayer extends Player {
                     final_direction = (direction + 4) % 4;
                 }
                 else {
-                    for (int i = 0; i < 4; i++){
-                        if (!isObstacleBlocking(i, 1)){
-                            final_direction = i;
+                    for (int i = 0; i < 20; i++){
+                        int rd = random.nextInt(4);
+                        if (!isObstacleBlocking(rd, 1)){
+                            final_direction = rd;
                             break;
                         }
-                    }
-                    final_direction = this.d;
+                        final_direction = this.d; // crash
+                    }                    
                 }
             }
         } else {
@@ -110,7 +112,15 @@ public class CirclePlayer extends Player {
             firstMove = -1;            
         }
 
-        
+        /*if (isObstacleBlocking(final_direction, 3)) {
+            for (int i = 0; i < 4; i++){
+                if (final_direction != i && !isObstacleBlocking(i, 1)){
+                    final_direction = i;
+                    break;
+                }                
+            } 
+        }*/
+
         return final_direction;
     }
 
