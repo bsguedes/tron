@@ -55,7 +55,10 @@ public class Arena extends Canvas implements Runnable {
         Player other1 = new MyOtherPlayer("Other", Color.yellow, this, this.xmax, this.ymax, (byte) 1);
         Player other2 = new MyOtherPlayer("Other", Color.yellow, this, this.xmax, this.ymax, (byte) 2);
 
-		this.player1 = croasonho1;
+        Player circle1 = new CirclePlayer("Circle", Color.white, this, this.xmax, this.ymax, (byte) 1);
+        Player circle2 = new CirclePlayer("Circle", Color.white, this, this.xmax, this.ymax, (byte) 2);
+
+		this.player1 = circle1;
 		this.player2 = random2;
 	}
 
