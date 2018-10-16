@@ -8,4 +8,4 @@ There are a few issues opened in order to improve the engine, which is very simp
 
 ## To run the engine
 
-Simply execute `make` on an Unix environment.
+Simply execute `make` on an Unix environment. Choose the bots that will compete in the Arena class.
