@@ -94,10 +94,11 @@ public class CirclePlayer extends Player {
 
     public int[] shuffle(){
         int[] a = new int[4];
+        int delta = random.nextInt(8);
         for (int i = 0; i < 4; i++) {
-            a[i] = i;
+            a[i] = (i + delta) & 3;
         }
-        for (int i = 0; i < 15; i++) {
+        for (int i = 0; i < 3; i++) {
             int j = random.nextInt(4);
             int k = random.nextInt(4);
             int b = a[j];
@@ -163,7 +164,7 @@ public class CirclePlayer extends Player {
         
         if (firstMove == -1) {
             direction = this.d;            
-            if (isObstacleBlocking(board, isClockwise ? ((--direction + 4) % 4) : (++direction % 4), 1)){
+            if (isObstacleBlocking(board, isClockwise ? ((--direction + 4) & 3) : (++direction & 3), 1)){
                 if (!isObstacleBlocking(board, this.d, 1)){
                     final_direction = this.d;
                 }
@@ -179,8 +180,8 @@ public class CirclePlayer extends Player {
                     }                    
                 }
             } else {
-                if (!isObstacleBlocking(board, (direction + 4) % 4, 1)){
-                    final_direction = (direction + 4) % 4;
+                if (!isObstacleBlocking(board, (direction + 4) & 3, 1)){
+                    final_direction = (direction + 4) & 3;
                 }
                 else {
                     for (int i = 0; i < 4; i++){
@@ -208,7 +209,7 @@ public class CirclePlayer extends Player {
             }
             if (firstMove == -1) {
                 direction = this.d;            
-                if (isObstacleBlocking(board, isClockwise ? ((--direction + 4) % 4) : (++direction % 4), 1)){
+                if (isObstacleBlocking(board, isClockwise ? ((--direction + 4) & 3) : (++direction & 3), 1)){
                     if (!isObstacleBlocking(board, this.d, 1)){
                         final_direction = this.d;
                     }
@@ -224,8 +225,8 @@ public class CirclePlayer extends Player {
                         }                    
                     }
                 } else {
-                    if (!isObstacleBlocking(board, (direction + 4) % 4, 1)){
-                        final_direction = (direction + 4) % 4;
+                    if (!isObstacleBlocking(board, (direction + 4) & 3, 1)){
+                        final_direction = (direction + 4) & 3;
                     }
                     else {
                         for (int i = 0; i < 4; i++){
