@@ -9,7 +9,7 @@ import java.io.*;
 public class Arena extends Canvas implements Runnable {
 	private final static int SIZE = 64;
 
-	public final static boolean SHOULD_DRAW = true;
+	public final static boolean SHOULD_DRAW = false;
 
 	public Tron tron;
 
@@ -52,8 +52,8 @@ public class Arena extends Canvas implements Runnable {
 		Player random1 = new RandomPlayer("Random", Color.green, this, this.xmax, this.ymax, (byte) 1);
         Player random2 = new RandomPlayer("Random", Color.green, this, this.xmax, this.ymax, (byte) 2);
 
-        Player other1 = new MyOtherPlayer("Other", Color.yellow, this, this.xmax, this.ymax, (byte) 1);
-        Player other2 = new MyOtherPlayer("Other", Color.yellow, this, this.xmax, this.ymax, (byte) 2);
+        Player other1 = new MyOtherPlayer("Other", Color.blue, this, this.xmax, this.ymax, (byte) 1);
+        Player other2 = new MyOtherPlayer("Other", Color.blue, this, this.xmax, this.ymax, (byte) 2);
 
         Player circle1 = new CirclePlayer("Circle", Color.white, this, this.xmax, this.ymax, (byte) 1);
         Player circle2 = new CirclePlayer("Circle", Color.white, this, this.xmax, this.ymax, (byte) 2);

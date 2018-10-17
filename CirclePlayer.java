@@ -25,6 +25,17 @@ public class CirclePlayer extends Player {
     public void restart(boolean theOtherGuyCrashed){
         isClockwise = random.nextInt(2) == 0;   
         firstMove = random.nextInt(4);     
+        //boo = new boolean[64][64];
+    }
+
+    private boolean hasThreeLockedNeighbors(boolean[][] board){
+        int x = this.x1;
+        int y = this.y1;
+        int count = 0;
+        for (int i = 0; i < 4; i++) {
+            count += isObstacleBlocking(board, i, 1, x, y) ? 1 : 0;
+        }        
+        return count >= 3;
     }
 
     private boolean hasThreeLockedNeighbors(boolean[][] board, int x, int y){
@@ -32,8 +43,8 @@ public class CirclePlayer extends Player {
         int count = 0;
         for (int i = 0; i < 4; i++) {
             count += isObstacleBlocking(board, i, 1, x, y) ? 1 : 0;
-        }
-        if (count == 3 && Math.abs(x - this.x1) <= 1 && Math.abs(y - this.y1) <= 1) return false;
+        }        
+        //if (count == 3 && Math.abs(x - this.x1) <= 1 && Math.abs(y - this.y1) <= 1 && x != this.x1 && y != this.y1) return false;        
         return count >= 3;
     }
 
@@ -96,9 +107,14 @@ public class CirclePlayer extends Player {
         return a;
     }
 
-    public int whereDoIGo() {
+   // int pi,pj;
+   // boolean[][] boo = new boolean[64][64];
+    
+    public int whereDoIGo() {          
         int final_direction = -1;
         int direction = 0;
+
+        int[] directions = shuffle();
 
        /* if (random.nextInt(100) == 0){
             isClockwise = !isClockwise;
@@ -109,24 +125,41 @@ public class CirclePlayer extends Player {
             for (int j = 0; j < y_max; j++) {
                 board[i][j] = this.arena.board[i][j];                                
             }
-        }
+        }    
 
         int deadEnds = 0;
         do
         {
             deadEnds = 0;
             for (int i = 0; i < x_max ; i++) {
-                for (int j = 0; j < y_max; j++) {        
-                    boolean b = hasThreeLockedNeighbors(board, i, j);                            
-                    if (b != board[i][j]) deadEnds++;
-                    board[i][j] = b;
+                for (int j = 0; j < y_max; j++) {                            
+                    if (hasThreeLockedNeighbors(board, i, j) && !board[i][j]) {                         
+                       // pi = i; pj = j;
+                        deadEnds++;
+                        board[i][j] = true;
+                      //  if (!boo[pi][pj]){
+                      //      boo[pi][pj] = true;
+                      //      arena.draw((graphics) -> {                                
+                      //          graphics.setColor(Color.orange);
+                      //          graphics.fillRect(5 * pi, 5 * pj, 5 , 5 );
+                      //      });
+                      //  }
+                    }                    
                 }
             }
         } while (deadEnds > 0);
 
         boolean crash = false;
 
-        int[] directions = shuffle();
+        if (hasThreeLockedNeighbors(board)){
+            for (int i = 0; i < 4; i++){
+                int rd = directions[i];
+                if (!isObstacleBlocking(board, rd, 1)){
+                    //System.out.println("here");
+                    return rd;                    
+                }                
+            } 
+        }
         
         if (firstMove == -1) {
             direction = this.d;            
@@ -211,10 +244,6 @@ public class CirclePlayer extends Player {
                 firstMove = -1;            
             }
         }
-
-
-
         return final_direction;
     }
-
 }
