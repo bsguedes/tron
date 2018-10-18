@@ -156,9 +156,12 @@ public class GuedesBot extends Player {
             for(int i = 0; i < 4; i++){
                 if (max == fillLength[i]){
                     c++;
+                } else {
+                    validDirections[i] = false;
                 }
             }
-            return c < count;
+            if (c >= count) return false;
+            return true;
         } else {
             System.out.println("error");
             return false;
