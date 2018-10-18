@@ -1,10 +1,7 @@
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.lang.*;
-import java.applet.*;
-import java.util.Vector;
-import java.net.*;
-import java.io.*;
+import java.util.Random;
 
 public class Arena extends Canvas implements Runnable {
 	private final static int SIZE = 64;
@@ -12,6 +9,7 @@ public class Arena extends Canvas implements Runnable {
 	public final static boolean SHOULD_DRAW = true;
 
 	public Tron tron;
+	private Random random = new Random();
 
 	private BufferStrategy bs;
 
@@ -46,7 +44,7 @@ public class Arena extends Canvas implements Runnable {
 		this.xmax = SIZE;
 		this.ymax = SIZE;
 
-		Player croasonho1 = new CroasonhoRacingTeamPlayer("Croasonho", Color.red, this, this.xmax, this.ymax, (byte) 1);
+		Player croasonho1 = new MaxMaxPlayer("Croasonho", Color.red, this, this.xmax, this.ymax, (byte) 1);
         Player croasonho2 = new CroasonhoRacingTeamPlayer("Croasonho", Color.red, this, this.xmax, this.ymax, (byte) 2);
 
 		Player random1 = new RandomPlayer("Random", Color.green, this, this.xmax, this.ymax, (byte) 1);
@@ -59,7 +57,7 @@ public class Arena extends Canvas implements Runnable {
         Player circle2 = new CirclePlayer("Circle", Color.white, this, this.xmax, this.ymax, (byte) 2);
 
 		this.player1 = circle1;
-		this.player2 = random2;
+		this.player2 = croasonho1;
 	}
 
 	public void start() {
@@ -92,8 +90,8 @@ public class Arena extends Canvas implements Runnable {
 
 		this.clearBoard();
 
-		this.player1.go(this.xmax / 4, this.ymax / 2);
-		this.player2.go(3 * this.xmax / 4, this.ymax / 2);
+		this.player1.go(random.nextInt(xmax), random.nextInt(ymax));
+		this.player2.go(random.nextInt(xmax), random.nextInt(ymax));
 
 		this.state = RUNNING;
 		this.lastmove = 0;
