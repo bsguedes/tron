@@ -1,6 +1,4 @@
 import java.awt.*;
-import java.lang.*;
-import java.applet.*;
 import java.util.Random;
 
 public class MaxMaxPlayer extends Player {

@@ -1,7 +1,4 @@
 import java.awt.*;
-import java.lang.*;
-import java.applet.*;
-import java.util.*;
 
 public class Tron extends Frame {
 	public static final int NORTH = 2;
