@@ -39,9 +39,10 @@ public class Arena extends Canvas implements Runnable {
         this.xmax = SIZE;
         this.ymax = SIZE;
 
-        players.add(new MaxMaxPlayer("MaxMax", Color.red, this, this.xmax, this.ymax, (byte) 1));
-        players.add(new CirclePlayer("Circle", Color.white, this, this.xmax, this.ymax, (byte) 2));
-        players.add(new MyOtherPlayer("Other", Color.green, this, this.xmax, this.ymax, (byte) 3));
+        players.add(new MaxMaxPlayer("MaxMax 1", Color.red, this, this.xmax, this.ymax, (byte) 1));
+        players.add(new CirclePlayer("Circle 1", Color.white, this, this.xmax, this.ymax, (byte) 2));
+//        players.add(new MaxMaxPlayer("MaxMax 2", Color.green, this, this.xmax, this.ymax, (byte) 3));
+//        players.add(new CirclePlayer("Circle 2", Color.yellow, this, this.xmax, this.ymax, (byte) 4));
     }
 
     public void start() {
@@ -128,6 +129,19 @@ public class Arena extends Canvas implements Runnable {
                 player.newPos();
             }
         }
+    }
+
+    public int[][] getEnemiesCoordinates(Player myPlayer) {
+        int[][] coordinates = new int[players.size() - 1][2];
+        int i = 0;
+        for (Player player : players) {
+            if(player != myPlayer) {
+                coordinates[i][0] = player.x1;
+                coordinates[i][1] = player.y1;
+                i++;
+            }
+        }
+        return coordinates;
     }
 
     public void killPlayer(byte number) {

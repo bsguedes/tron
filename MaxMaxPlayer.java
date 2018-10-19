@@ -1,8 +1,11 @@
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Random;
 
 public class MaxMaxPlayer extends Player {
     private int DEPTH = 10;
+    private boolean[][] enemyBoard;
+    private ArrayList<int[]> lastEnemyMoves = new ArrayList<>();
 
     MaxMaxPlayer(String n, Color c, Arena a, int x, int y, byte number) {
         name = n;
@@ -11,6 +14,12 @@ public class MaxMaxPlayer extends Player {
         x_max = x;
         y_max = y;
         player_no = number;
+        enemyBoard = new boolean[x_max][y_max];
+    }
+
+    @Override
+    public void restart(boolean theOtherGuyCrashed) {
+        enemyBoard = new boolean[x_max][y_max];
     }
 
     private int getNormalizedCoordinate(int coord, int max) {
@@ -58,12 +67,21 @@ public class MaxMaxPlayer extends Player {
 
     public int whereDoIGo() {
         try {
+            Random random = new Random();
+
+            int[][] enemies = arena.getEnemiesCoordinates(this);
+            lastEnemyMoves.clear();
+            for (int[] enemy : enemies) {
+                int ex = enemy[0];
+                int ey = enemy[1];
+                enemyBoard[ex][ey] = true;
+                lastEnemyMoves.add(new int[]{ex, ey});
+            }
 
             boolean[][] board = new boolean[x_max][y_max];
-            for (int i = 0; i < x_max; i++)
+            for (int i = 0; i < x_max; i++) {
                 System.arraycopy(this.arena.board[i], 0, board[i], 0, y_max);
-
-            Random random = new Random();
+            }
 
             int scoreUp = getScore(board, 0, x1, y1 - 1, 0) + random.nextInt(4);
             int scoreDown = getScore(board, 0, x1, y1 + 1, 0) + random.nextInt(4);
