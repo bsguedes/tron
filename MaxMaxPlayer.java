@@ -4,57 +4,51 @@ import java.applet.*;
 import java.util.Random;
 
 public class MaxMaxPlayer extends Player {
-    public Random random;
-    public int DEPTH = 10;
+    private int DEPTH = 10;
 
-    private int count = 0;
-
-    public MaxMaxPlayer(String n, Color c, Arena a, int x, int y, byte number) {
+    MaxMaxPlayer(String n, Color c, Arena a, int x, int y, byte number) {
         name = n;
         color = c;
         arena = a;
         x_max = x;
         y_max = y;
         player_no = number;
-        random = new Random();
     }
 
-    @Override
-    public void restart(boolean theOtherGuyCrashed) {
-        count = 0;
+    private int getNormalizedCoordinate(int coord, int max) {
+        if (coord < 0) {
+            return max - 1;
+        } else if (coord > max - 1) {
+            return 0;
+        }
+        return coord;
     }
 
-    public int getScore(boolean[][] board, int depth, int x, int y, int score) {
-        int bonus = count < 300 ? 1 : -1;
-        if (x < 0) {
-            score += 5 * bonus;
-            x = x_max - 1;
+    private int getScore(boolean[][] board, int depth, int x, int y, int score) {
+        x = getNormalizedCoordinate(x, x_max);
+        y = getNormalizedCoordinate(y, y_max);
+        int x1 = getNormalizedCoordinate(x + 1, x_max);
+        int y1 = getNormalizedCoordinate(y + 1, y_max);
+        int x2 = getNormalizedCoordinate(x - 1, x_max);
+        int y2 = getNormalizedCoordinate(y - 1, y_max);
+        if ((board[x][y1] && board[x][y2]) || (board[x1][y] && board[x2][y])) {
+            score -= 10;
         }
-        if (x > x_max - 1) {
-            score += 5 * bonus;
-            x = 0;
-        }
-        if (y < 0) {
-            score += 5 * bonus;
-            y = y_max - 1;
-        }
-        if (y > y_max - 1) {
-            score += 5 * bonus;
-            y = 0;
-        }
-        if (depth == DEPTH) {
-            return score + 150;
+        if (!board[x][y1] && !board[x][y2] && !board[x1][y] && !board[x2][y] &&
+            !board[x1][y1] && !board[x1][y2] && !board[x2][y1] && !board[x2][y2]) {
+            score += 10;
         }
         if (board[x][y]) {
             return score - 100;
+        }
+        if (depth == DEPTH) {
+            return score + 100;
         }
 
         board[x][y] = true;
         boolean[][] newboard = new boolean[x_max][y_max];
         for (int i = 0; i < x_max; i++) {
-            for (int j = 0; j < y_max; j++) {
-                newboard[i][j] = board[i][j];
-            }
+            System.arraycopy(board[i], 0, newboard[i], 0, y_max);
         }
 
         int scoreLeft = getScore(newboard, depth + 1, x - 1, y, score + 5);
@@ -69,8 +63,7 @@ public class MaxMaxPlayer extends Player {
 
             boolean[][] board = new boolean[x_max][y_max];
             for (int i = 0; i < x_max; i++)
-                for (int j = 0; j < y_max; j++)
-                    board[i][j] = this.arena.board[i][j];
+                System.arraycopy(this.arena.board[i], 0, board[i], 0, y_max);
 
             Random random = new Random();
 
@@ -87,12 +80,8 @@ public class MaxMaxPlayer extends Player {
             if (max == scoreLeft) dir = Tron.WEST;
             if (max == scoreUp) dir = Tron.NORTH;
 
-            count++;
-            System.out.println(count);
-
             return dir;
         } catch (Exception e) {
-            System.out.println("LALALALALALA");
             return Tron.EAST;
         }
     }

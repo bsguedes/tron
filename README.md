@@ -1,5 +1,11 @@
-To-do:
-- Allow more bots to play. Hopefully dynamically, so we won't have to recompile all the time.
-- Create abstraction for opponent, encapsulate access so people don't screw around.
-- Improve arena size.
-- Thread.sleep... something's fuzzy with the performance.
+## Tron bot game
+
+To create a bot, extend a Player class implementing the whereDoIGo() method. Look at the sample bots that are available for examples and how to implement the default constructor.
+
+## Issues
+
+There are a few issues opened in order to improve the engine, which is very simple right now.
+
+## To run the engine
+
+Simply execute `make` on an Unix environment. Choose the bots that will compete in the Arena class.
