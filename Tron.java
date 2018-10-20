@@ -1,7 +1,4 @@
 import java.awt.*;
-import java.lang.*;
-import java.applet.*;
-import java.util.*;
 
 public class Tron extends Frame {
 	public static final int NORTH = 2;
@@ -9,21 +6,14 @@ public class Tron extends Frame {
 	public static final int SOUTH = 0;
 	public static final int WEST = 3;
 
-	public String idParam;
 	public Arena arena;
-	public Label statusLabel;
-	public Button startButton;
-	public Button quitButton;
-	public static Random random;
-
-	public int playerOneScore, playerTwoScore;
+	private Label statusLabel;
+	private Button startButton;
+	private Button quitButton;
 
 	public static void main(String args[]) {
 		Tron tron = new Tron();
 		tron.setTitle("Tron");
-
-		tron.playerOneScore = 0;
-		tron.playerTwoScore = 0;
 
 		tron.arena = new Arena(tron);
 
@@ -67,20 +57,11 @@ public class Tron extends Frame {
 	}
 
 	public void updateScore() {
-		playerOneScore = arena.player1.score;
-		playerTwoScore = arena.player2.score;
-		statusLabel.setText(arena.player1.name + ": [" + playerOneScore + "]  " + arena.player2.name +": [" + playerTwoScore + "]");
-	}
-
-	public void start() {
-		arena.start();
-	}
-
-	public void stop() {
-		arena.stop();
-	}
-
-	public void destroy() {
+		StringBuilder text = new StringBuilder();
+		for(Player player : Arena.players) {
+			text.append(player.name).append(": [").append(player.score).append("] ");
+		}
+		statusLabel.setText(text.toString());
 	}
 
 	public boolean handleEvent(Event event) {

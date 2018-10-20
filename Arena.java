@@ -1,178 +1,166 @@
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.lang.*;
-import java.applet.*;
-import java.util.Vector;
-import java.net.*;
-import java.io.*;
+import java.util.ArrayList;
+import java.util.Random;
 
 public class Arena extends Canvas implements Runnable {
-	private final static int SIZE = 64;
+    private final static int SIZE = 64;
 
-	public final static boolean SHOULD_DRAW = true;
+    public final static boolean SHOULD_DRAW = true;
 
-	public Tron tron;
+    public Tron tron;
+    private Random random = new Random();
 
-	private BufferStrategy bs;
+    private BufferStrategy bs;
 
-	private Thread conductor;
-	public Player player1;
-	public Player player2;
-	public boolean board[][];
-	public boolean clear;
-	public boolean startAgain = false;
-	private int xmax, ymax;
+    private Thread conductor;
+    public static ArrayList<Player> players = new ArrayList<>();
+    public boolean board[][];
+    public boolean startAgain = false;
+    private int xmax, ymax;
 
-	public static final int WAITING = 0;
-	public static final int RUNNING = 1;
-	public static final int RESTARTING = 2;
-	public int state;
+    private static final int WAITING = 0;
+    private static final int RUNNING = 1;
+    private static final int RESTARTING = 2;
+    private int state;
 
-	public int lastmove;
-	public int gen_no;
+    private int playerSize = 5;
 
-	public int playerSize = 5;
+    public Arena(Tron t) {
+        this.setBackground(Color.black);
+        this.resize(playerSize * SIZE, playerSize * SIZE);
 
-	public Arena(Tron t) {
-		this.setBackground(Color.black);
-		this.resize(playerSize * this.SIZE, playerSize * this.SIZE);
+        this.conductor = null;
+        this.board = null;
+        this.state = WAITING;
+        this.tron = t;
 
-		this.conductor = null;
-		this.board = null;
-		this.state = WAITING;
-		this.tron = t;
-		this.gen_no = 0;
+        this.xmax = SIZE;
+        this.ymax = SIZE;
 
-		this.xmax = SIZE;
-		this.ymax = SIZE;
+        players.add(new MaxMaxPlayer("MaxMax", Color.red, this, this.xmax, this.ymax, (byte) 1));
+        players.add(new CirclePlayer("Circle", Color.white, this, this.xmax, this.ymax, (byte) 2));
+        players.add(new MyOtherPlayer("Other", Color.green, this, this.xmax, this.ymax, (byte) 3));
+    }
 
-		Player croasonho1 = new CroasonhoRacingTeamPlayer("Croasonho", Color.red, this, this.xmax, this.ymax, (byte) 1);
-        Player croasonho2 = new CroasonhoRacingTeamPlayer("Croasonho", Color.red, this, this.xmax, this.ymax, (byte) 2);
+    public void start() {
+        for (Player player : players) {
+            player.crash = false;
+        }
+        this.repaint();
 
-		Player random1 = new RandomPlayer("Random", Color.green, this, this.xmax, this.ymax, (byte) 1);
-        Player random2 = new RandomPlayer("Random", Color.green, this, this.xmax, this.ymax, (byte) 2);
+        if (this.board == null) {
+            this.board = new boolean[xmax][ymax];
+        }
 
-        Player other1 = new MyOtherPlayer("Other", Color.yellow, this, this.xmax, this.ymax, (byte) 1);
-        Player other2 = new MyOtherPlayer("Other", Color.yellow, this, this.xmax, this.ymax, (byte) 2);
+        this.createBufferStrategy(120);
+        this.bs = this.getBufferStrategy();
 
-		this.player1 = croasonho1;
-		this.player2 = random2;
-	}
+        if (this.conductor == null) {
+            this.conductor = new Thread(this, "Arena");
+            this.conductor.start();
+        } else {
+            this.conductor.resume();
+        }
+    }
 
-	public void start() {
-		this.player1.crash = false;
-		this.player2.crash = false;
-		this.clear = true;
-		this.repaint();
+    private void startPlayers() {
+        this.tron.updateScore();
 
-		if (this.board == null) {
-			this.board = new boolean[xmax][ymax];
-		}
+        this.clearBoard();
 
-		this.createBufferStrategy(120);
-		this.bs = this.getBufferStrategy();
+        for (Player player : players) {
+            player.go(random.nextInt(xmax), random.nextInt(ymax));
+        }
 
-		if (this.conductor == null) {
-			this.conductor = new Thread(this, "Arena");
-			this.conductor.start();
-		} else {
-			this.conductor.resume();
-		}
-	}
+        this.state = RUNNING;
+    }
 
-	public void stop() {
-		this.conductor.suspend();
-	}
+    public void run() {
+        while (true) {
+            switch (state) {
+                case RUNNING:
+                    for (Player player : players) {
+                        if (!player.crash) {
+                            player.step();
+                        }
+                    }
+                    break;
+                case RESTARTING:
+                    for (Player p1 : players) {
+                        boolean crash = true;
+                        for (Player p2 : players) {
+                            if (p1 != p2 && !p2.crash) {
+                                crash = false;
+                            }
+                        }
+                        if (crash) {
+                            p1.tallyWin();
+                        }
+                        p1.restart(crash);
+                    }
 
-	public void startPlayers() {
-		this.tron.updateScore();
+                    this.state = WAITING;
+                    this.tron.updateScore();
+                    if (!SHOULD_DRAW) this.startAgain = true;
+                    break;
+                case WAITING:
+                    if (this.startAgain) {
+                        this.startAgain = false;
+                        this.start();
+                        this.startPlayers();
+                    }
+                    break;
+            }
 
-		this.clearBoard();
+            this.repaint();
 
-		this.player1.go(this.xmax / 4, this.ymax / 2);
-		this.player2.go(3 * this.xmax / 4, this.ymax / 2);
+            if (SHOULD_DRAW) {
+                try {
+                    Thread.sleep(4);
+                } catch (InterruptedException ignored) {
 
-		this.state = RUNNING;
-		this.lastmove = 0;
-	}
+                }
+            }
 
-	public void run() {
-		while (true) {
-			switch (state) {
-			case RUNNING:
-				this.player1.step();
-				this.player2.step();
-				break;
-			case RESTARTING:
-				if (this.player1.crash && !this.player2.crash) {
-					this.player2.tallyWin();
-				} else if (this.player2.crash && !this.player1.crash) {
-					this.player1.tallyWin();
-				}
+            for (Player player : players) {
+                player.newPos();
+            }
+        }
+    }
 
-				this.player1.restart(this.player2.crash);
-				this.player2.restart(this.player1.crash);
+    public void killPlayer(byte number) {
+        int playersCrashed = 0;
+        for (Player player : players) {
+            if (player.player_no == number) {
+                player.crash = true;
+            }
+            if (player.crash) {
+                playersCrashed++;
+            }
+        }
+        if (playersCrashed == players.size() - 1) {
+            this.state = RESTARTING;
+        }
+    }
 
-				this.state = WAITING;
-				this.tron.updateScore();
-				//this.startAgain = true;
-				break;
-			case WAITING:
-				if (this.startAgain) {
-					this.startAgain = false;
-					this.start();
-					this.startPlayers();
-				}
-				break;
-			}
+    public void draw(DrawLambda callback) {
+        Graphics2D graphics = (Graphics2D) this.bs.getDrawGraphics().create();
 
-			this.repaint();
+        graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        callback.draw(graphics);
 
-			try {
-				Thread.sleep(4);
-			} catch (InterruptedException e) {
-			}
+        graphics.dispose();
+        this.bs.show();
+    }
 
-			if (this.player1 != null) {
-				this.player1.newPos();
-				this.player2.newPos();
-			}
-		}
-	}
-
-	public void draw(DrawLambda callback) {
-		Graphics2D graphics = (Graphics2D) this.bs.getDrawGraphics().create();
-
-		graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		callback.draw(graphics);
-
-		graphics.dispose();
-		this.bs.show();
-	}
-
-	public void update() {
-		Graphics graphics = this.bs.getDrawGraphics().create();
-
-		if (this.clear) {
-			graphics.clearRect(0, 0, this.size().width, this.size().height);
-			this.clear = false;
-		}
-		if (this.player1 != null) {
-			this.player1.paint(graphics);
-		}
-		if (this.player2 != null) {
-			this.player2.paint(graphics);
-		}
-
-		graphics.dispose();
-		this.bs.show();
-	}
-
-	public void clearBoard() {
-		int i, j;
-		for (i = 0; i < this.xmax; i++)
-			for (j = 0; j < this.ymax; j++)
-				this.board[i][j] = false;
-		this.clear = true;
-	}
+    private void clearBoard() {
+        int i, j;
+        for (i = 0; i < this.xmax; i++) {
+            for (j = 0; j < this.ymax; j++) {
+                this.board[i][j] = false;
+            }
+        }
+    }
 }
