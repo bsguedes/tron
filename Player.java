@@ -3,37 +3,31 @@ import java.lang.*;
 
 public class Player {
     public String name;
-    public Color color;
+    Color color;
     public Arena arena;
-    public byte player_no;
+    byte player_no;
 
-    public boolean didsomething = false;
+    boolean didsomething = false;
 
-    public int x_max;
-    public int y_max;
-    public static final int NORTH = 2;
-    public static final int EAST = 1;
-    public static final int SOUTH = 0;
-    public static final int WEST = 3;
+    int x_max;
+    int y_max;
+    private static final int NORTH = 2;
+    private static final int EAST = 1;
+    private static final int SOUTH = 0;
+    private static final int WEST = 3;
 
-    public static final int CRASH_DELTA = 10;
+    private static final int CRASH_DELTA = 10;
 
-    public int x0, y0;
-    public int x1, y1;
-    public int d;
-    public int old_d;
+    private int x0, y0;
+    int x1, y1;
+    int d;
+    private int old_d;
     public boolean crash;
     public int score;
 
-    public int playerSize = 5;
+    private int playerSize = 5;
 
     public Player() {
-    }
-
-    public void start() {
-    }
-
-    public void stop() {
     }
 
     public void restart(boolean theOtherGuyCrashed) {
@@ -58,11 +52,12 @@ public class Player {
             old_d = d;
         }
         crash = markBoard(d);
-        if (crash)
-            arena.state = arena.RESTARTING;
+        if (crash) {
+            arena.killPlayer(player_no);
+        }
     }
 
-    public void paint(Graphics g) {
+    private void paint(Graphics g) {
         if (crash) {
             g.setColor(Color.red);
             g.drawLine(playerSize *x1 - CRASH_DELTA, playerSize *y1 - CRASH_DELTA, playerSize *x1 + CRASH_DELTA, playerSize *y1 + CRASH_DELTA);
@@ -78,17 +73,14 @@ public class Player {
     public void newPos() {
         x0 = x1;
         y0 = y1;
-        if (arena.SHOULD_DRAW) {
-            arena.draw((graphics) -> {
-                paint(graphics);
-            });
+        if (Arena.SHOULD_DRAW) {
+            arena.draw(this::paint);
         }
     }
 
 
-    public boolean markBoard(int direction) {
+    private boolean markBoard(int direction) {
         boolean r = false;
-        int i;
         switch (direction) {
         case SOUTH:
             y1++;
