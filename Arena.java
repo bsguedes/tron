@@ -41,8 +41,8 @@ public class Arena extends Canvas implements Runnable {
 
         players.add(new MaxMaxPlayer("MaxMax 1", Color.red, this, this.xmax, this.ymax, (byte) 1));
         players.add(new CirclePlayer("Circle 1", Color.white, this, this.xmax, this.ymax, (byte) 2));
-//        players.add(new MaxMaxPlayer("MaxMax 2", Color.green, this, this.xmax, this.ymax, (byte) 3));
-//        players.add(new CirclePlayer("Circle 2", Color.yellow, this, this.xmax, this.ymax, (byte) 4));
+        players.add(new MaxMaxPlayer("MaxMax 2", Color.green, this, this.xmax, this.ymax, (byte) 3));
+        players.add(new CirclePlayer("Circle 2", Color.yellow, this, this.xmax, this.ymax, (byte) 4));
     }
 
     public void start() {

@@ -4,8 +4,8 @@ import java.util.Random;
 
 public class MaxMaxPlayer extends Player {
     private int DEPTH = 10;
-    private boolean[][] enemyBoard;
-    private ArrayList<int[]> lastEnemyMoves = new ArrayList<>();
+    private int[][] enemyBoard;
+    private int count = 0;
 
     MaxMaxPlayer(String n, Color c, Arena a, int x, int y, byte number) {
         name = n;
@@ -14,12 +14,11 @@ public class MaxMaxPlayer extends Player {
         x_max = x;
         y_max = y;
         player_no = number;
-        enemyBoard = new boolean[x_max][y_max];
     }
 
     @Override
     public void restart(boolean theOtherGuyCrashed) {
-        enemyBoard = new boolean[x_max][y_max];
+        count = 0;
     }
 
     private int getNormalizedCoordinate(int coord, int max) {
@@ -45,6 +44,7 @@ public class MaxMaxPlayer extends Player {
             !board[x1][y1] && !board[x1][y2] && !board[x2][y1] && !board[x2][y2]) {
             score += 10;
         }
+        score += enemyBoard[x][y];
         if (board[x][y]) {
             return score - 100;
         }
@@ -70,12 +70,17 @@ public class MaxMaxPlayer extends Player {
             Random random = new Random();
 
             int[][] enemies = arena.getEnemiesCoordinates(this);
-            lastEnemyMoves.clear();
+            enemyBoard = new int[x_max][y_max];
             for (int[] enemy : enemies) {
                 int ex = enemy[0];
                 int ey = enemy[1];
-                enemyBoard[ex][ey] = true;
-                lastEnemyMoves.add(new int[]{ex, ey});
+                for (int i = -3; i < 3; i++) {
+                    for(int j = -3; j < 3; j++) {
+                        int nex = getNormalizedCoordinate(ex + i, x_max);
+                        int ney = getNormalizedCoordinate(ey + j, y_max);
+                        enemyBoard[nex][ney] = 2 * (count < 150 ? -1 : 1);
+                    }
+                }
             }
 
             boolean[][] board = new boolean[x_max][y_max];
@@ -95,6 +100,8 @@ public class MaxMaxPlayer extends Player {
             if (max == scoreRight) dir = Tron.EAST;
             if (max == scoreLeft) dir = Tron.WEST;
             if (max == scoreUp) dir = Tron.NORTH;
+
+            count++;
 
             return dir;
         } catch (Exception e) {
