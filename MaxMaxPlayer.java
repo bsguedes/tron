@@ -5,7 +5,7 @@ public class MaxMaxPlayer extends Player {
     private int DEPTH = 10;
     private int[][] enemyBoard;
     private int count = 0;
-    private int ENEMY_STRATEGY = 100;
+    private int ENEMY_STRATEGY = 50;
 
     MaxMaxPlayer(String n, Color c, Arena a, int x, int y, byte number) {
         name = n;
@@ -40,10 +40,6 @@ public class MaxMaxPlayer extends Player {
         if ((board[x][y1] && board[x][y2]) || (board[x1][y] && board[x2][y])) {
             score -= 10;
         }
-        if (!board[x][y1] && !board[x][y2] && !board[x1][y] && !board[x2][y] &&
-            !board[x1][y1] && !board[x1][y2] && !board[x2][y1] && !board[x2][y2]) {
-            score += 10;
-        }
         score += enemyBoard[x][y];
         if (board[x][y]) {
             return score - 100;
@@ -58,10 +54,10 @@ public class MaxMaxPlayer extends Player {
             System.arraycopy(board[i], 0, newboard[i], 0, y_max);
         }
 
-        int scoreLeft = getScore(newboard, depth + 1, x - 1, y, score + 5);
-        int scoreRight = getScore(newboard, depth + 1, x + 1, y, score + 5);
-        int scoreUp = getScore(newboard, depth + 1, x, y - 1, score + 5);
-        int scoreDown = getScore(newboard, depth + 1, x, y + 1, score + 5);
+        int scoreLeft = getScore(newboard, depth + 1, x - 1, y, score + 10);
+        int scoreRight = getScore(newboard, depth + 1, x + 1, y, score + 10);
+        int scoreUp = getScore(newboard, depth + 1, x, y - 1, score + 10);
+        int scoreDown = getScore(newboard, depth + 1, x, y + 1, score + 10);
         return Math.max(scoreLeft, Math.max(scoreRight, Math.max(scoreUp, scoreDown)));
     }
 
@@ -71,11 +67,12 @@ public class MaxMaxPlayer extends Player {
 
             int[][] enemies = arena.getEnemiesCoordinates(this);
             enemyBoard = new int[x_max][y_max];
+            int blockSize = 3;
             for (int[] enemy : enemies) {
                 int ex = enemy[0];
                 int ey = enemy[1];
-                for (int i = -3; i < 3; i++) {
-                    for(int j = -3; j < 3; j++) {
+                for (int i = -blockSize; i < blockSize; i++) {
+                    for(int j = -blockSize; j < blockSize; j++) {
                         int nex = getNormalizedCoordinate(ex + i, x_max);
                         int ney = getNormalizedCoordinate(ey + j, y_max);
                         enemyBoard[nex][ney] = 2 * (count < ENEMY_STRATEGY ? -1 : 1);

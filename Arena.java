@@ -7,7 +7,7 @@ import java.util.Random;
 public class Arena extends Canvas implements Runnable {
     private final static int SIZE = 32;
     public int PLAYER_SIZE = 10;
-    public final static boolean SHOULD_DRAW = true;
+    public final static boolean SHOULD_DRAW = false;
 
     public Tron tron;
     private Random random = new Random();
@@ -39,6 +39,8 @@ public class Arena extends Canvas implements Runnable {
 
         players.add(new MaxMaxPlayer("MaxMax", Color.red, this, this.xmax, this.ymax, (byte) 1));
         players.add(new GuedesBot("Guedes", Color.white, this, this.xmax, this.ymax, (byte) 2));
+//        players.add(new MaxMaxPlayer("MaxMax 2", Color.green, this, this.xmax, this.ymax, (byte) 3));
+//        players.add(new GuedesBot("Guedes 2", Color.yellow, this, this.xmax, this.ymax, (byte) 4));
     }
 
     public void start() {
@@ -101,7 +103,6 @@ public class Arena extends Canvas implements Runnable {
                     this.state = WAITING;
                     this.tron.updateScore();
                     if (!SHOULD_DRAW) this.startAgain = true;
-//                    this.startAgain = true;
                     break;
                 case WAITING:
                     if (this.startAgain) {
