@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Arena extends Canvas implements Runnable {
-    private final static int SIZE = 64;
-
+    private final static int SIZE = 32;
+    public int PLAYER_SIZE = 10;
     public final static boolean SHOULD_DRAW = true;
 
     public Tron tron;
@@ -25,11 +25,9 @@ public class Arena extends Canvas implements Runnable {
     private static final int RESTARTING = 2;
     private int state;
 
-    private int playerSize = 5;
-
     public Arena(Tron t) {
         this.setBackground(Color.black);
-        this.resize(playerSize * SIZE, playerSize * SIZE);
+        this.resize(PLAYER_SIZE * SIZE, PLAYER_SIZE * SIZE);
 
         this.conductor = null;
         this.board = null;
@@ -39,10 +37,8 @@ public class Arena extends Canvas implements Runnable {
         this.xmax = SIZE;
         this.ymax = SIZE;
 
-        players.add(new MaxMaxPlayer("MaxMax 1", Color.red, this, this.xmax, this.ymax, (byte) 1));
-        players.add(new CirclePlayer("Circle 1", Color.white, this, this.xmax, this.ymax, (byte) 2));
-        players.add(new MaxMaxPlayer("MaxMax 2", Color.green, this, this.xmax, this.ymax, (byte) 3));
-        players.add(new CirclePlayer("Circle 2", Color.yellow, this, this.xmax, this.ymax, (byte) 4));
+        players.add(new MaxMaxPlayer("MaxMax", Color.red, this, this.xmax, this.ymax, (byte) 1));
+        players.add(new GuedesBot("Guedes", Color.white, this, this.xmax, this.ymax, (byte) 2));
     }
 
     public void start() {
@@ -105,6 +101,7 @@ public class Arena extends Canvas implements Runnable {
                     this.state = WAITING;
                     this.tron.updateScore();
                     if (!SHOULD_DRAW) this.startAgain = true;
+//                    this.startAgain = true;
                     break;
                 case WAITING:
                     if (this.startAgain) {

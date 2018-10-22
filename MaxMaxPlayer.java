@@ -1,11 +1,11 @@
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.Random;
 
 public class MaxMaxPlayer extends Player {
     private int DEPTH = 10;
     private int[][] enemyBoard;
     private int count = 0;
+    private int ENEMY_STRATEGY = 100;
 
     MaxMaxPlayer(String n, Color c, Arena a, int x, int y, byte number) {
         name = n;
@@ -78,7 +78,7 @@ public class MaxMaxPlayer extends Player {
                     for(int j = -3; j < 3; j++) {
                         int nex = getNormalizedCoordinate(ex + i, x_max);
                         int ney = getNormalizedCoordinate(ey + j, y_max);
-                        enemyBoard[nex][ney] = 2 * (count < 150 ? -1 : 1);
+                        enemyBoard[nex][ney] = 2 * (count < ENEMY_STRATEGY ? -1 : 1);
                     }
                 }
             }

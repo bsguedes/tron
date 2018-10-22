@@ -25,8 +25,6 @@ public class Player {
     public boolean crash;
     public int score;
 
-    private int playerSize = 5;
-
     public Player() {
     }
 
@@ -60,13 +58,13 @@ public class Player {
     private void paint(Graphics g) {
         if (crash) {
             g.setColor(Color.red);
-            g.drawLine(playerSize *x1 - CRASH_DELTA, playerSize *y1 - CRASH_DELTA, playerSize *x1 + CRASH_DELTA, playerSize *y1 + CRASH_DELTA);
-            g.drawLine(playerSize *x1, playerSize *y1 - CRASH_DELTA, playerSize *x1, playerSize *y1 + CRASH_DELTA);
-            g.drawLine(playerSize *x1 + CRASH_DELTA, playerSize *y1 - CRASH_DELTA, playerSize *x1 - CRASH_DELTA, playerSize *y1 + CRASH_DELTA);
-            g.drawLine(playerSize *x1 - CRASH_DELTA, playerSize *y1, playerSize *x1 + CRASH_DELTA, playerSize *y1);
+            g.drawLine(arena.PLAYER_SIZE *x1 - CRASH_DELTA, arena.PLAYER_SIZE *y1 - CRASH_DELTA, arena.PLAYER_SIZE *x1 + CRASH_DELTA, arena.PLAYER_SIZE *y1 + CRASH_DELTA);
+            g.drawLine(arena.PLAYER_SIZE *x1, arena.PLAYER_SIZE *y1 - CRASH_DELTA, arena.PLAYER_SIZE *x1, arena.PLAYER_SIZE *y1 + CRASH_DELTA);
+            g.drawLine(arena.PLAYER_SIZE *x1 + CRASH_DELTA, arena.PLAYER_SIZE *y1 - CRASH_DELTA, arena.PLAYER_SIZE *x1 - CRASH_DELTA, arena.PLAYER_SIZE *y1 + CRASH_DELTA);
+            g.drawLine(arena.PLAYER_SIZE *x1 - CRASH_DELTA, arena.PLAYER_SIZE *y1, arena.PLAYER_SIZE *x1 + CRASH_DELTA, arena.PLAYER_SIZE *y1);
         } else {
             g.setColor(color);
-            g.fillRect(playerSize *x1, playerSize *y1, playerSize , playerSize );
+            g.fillRect(arena.PLAYER_SIZE *x1, arena.PLAYER_SIZE *y1, arena.PLAYER_SIZE, arena.PLAYER_SIZE);
         }
     }
 
